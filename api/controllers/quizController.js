@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-  Task = mongoose.model('Quizzes');
+  Quiz = mongoose.model('Quizzes');
 
 exports.list_all_quizzes = function(req, res) {
   Quiz.find({}, function(err, quiz) {
@@ -32,6 +32,8 @@ exports.read_a_quiz = function(req, res) {
 
 
 exports.update_a_quiz = function(req, res) {
+  console.log("update_a_quiz");
+  console.log(req.body);
   Quiz.findOneAndUpdate({_id: req.params.quizId}, req.body, {new: true}, function(err, quiz) {
     if (err)
       res.send(err);

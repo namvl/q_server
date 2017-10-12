@@ -19,6 +19,8 @@ var QuizSchema = new Schema({
   },
   question_groups:{
     type:[{
+      index:{ type: Number},
+      title:{ type: String},
       questions:{
         type:[{
           question:{

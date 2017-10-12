@@ -1,0 +1,37 @@
+[{
+	"index": 1,
+	"title": "Dien vao cho trong",
+	"question": [{
+		"content": "a=10, b=2. a*b = __ ",
+		"mark": 10,
+		"choices": [{
+			"content": "10",
+			"correct": false
+		}, {
+			"content": "40",
+			"correct": false
+		}, {
+			"content": "60",
+			"correct": false
+		}, {
+			"content": "20",
+			"correct": true
+		}]
+	}, {
+		"content": "a=12, b=11. dien tich hinh chu nhat la = __ ",
+		"mark": 10,
+		"choices": [{
+			"content": "10",
+			"correct": false
+		}, {
+			"content": "40",
+			"correct": false
+		}, {
+			"content": "60",
+			"correct": false
+		}, {
+			"content": "132",
+			"correct": true
+		}]
+	}]
+}]
