@@ -1,0 +1,32 @@
+{
+  "name": "q_server",
+  "version": "1.0.0",
+  "description": "quizzes server app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo Hello world"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/namvl/q_server.git"
+  },
+  "keywords": [
+    "quizzes",
+    "quiz",
+    "restful",
+    "api",
+    "server"
+  ],
+  "author": "namvl@hotmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/namvl/q_server/issues"
+  },
+  "homepage": "https://github.com/namvl/q_server#readme",
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
