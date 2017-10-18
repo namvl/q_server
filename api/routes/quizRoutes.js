@@ -2,7 +2,6 @@
 module.exports = function(app) {
   var quizList = require('../controllers/quizController');
 
-  // todoList Routes
   app.route('/quizzes')
     .get(quizList.list_all_quizzes)
     .post(quizList.create_a_quiz);

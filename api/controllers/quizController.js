@@ -21,7 +21,6 @@ exports.create_a_quiz = function(req, res) {
   });
 };
 
-
 exports.read_a_quiz = function(req, res) {
   Quiz.findById(req.params.quizId, function(err, quiz) {
     if (err)
@@ -30,17 +29,13 @@ exports.read_a_quiz = function(req, res) {
   });
 };
 
-
 exports.update_a_quiz = function(req, res) {
-  console.log("update_a_quiz");
-  console.log(req.body);
   Quiz.findOneAndUpdate({_id: req.params.quizId}, req.body, {new: true}, function(err, quiz) {
     if (err)
       res.send(err);
     res.json(quiz);
   });
 };
-
 
 exports.delete_a_quiz = function(req, res) {
   Quiz.remove({
