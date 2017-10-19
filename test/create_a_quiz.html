@@ -2,43 +2,50 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="create_a_quiz.js"></script>
 </head>
 <body>
   <div class="form-group">
-    <form action="" method="post">
+    <form action="http://api.namvl.com/quizzes" method="post" onsubmit="return submitForm()">
       <div class="">
-        <input type="text" name="name" placeholder="Enter quiz name"/>
+        <span>Quiz name: </span><input type="text" name="name" placeholder="Enter quiz name"/>
       </div>
       <div>
-        <input type="number" name="pass_mark" placeholder="50" />
+        <span>Pass mark: </span><input type="number" name="pass_mark" placeholder="50" />
       </div>
       <div>
-        <input type="text" name="question_groups[0].[title]" placeholder="Enter question group title"  />
+        <a class="addQuestionGroups btn btn-primary" href="#">Add question group</a>
       </div>
+      <div id="question_groups_container">
+      </div> <!-- end question_groups_container -->
       <div>
-        <input type="text" name="question_groups[0].[questions][0].[title]" placeholder="Enter question content"  />
-        <input type="number" name="question_groups[0].[questions][0].[mark]" placeholder="Enter question mark"  />
-      </div>
-      <div>
-        <input type="text" name="question_groups[0].[questions][0].[answers][0].[answer]" placeholder="Enter question answer"  />
-        <input type="checkbox" name="question_groups[0].[questions][0].[answers][0].[correct]"  />
-      </div>
-      <div>
-        <input type="text" name="question_groups[0].[questions][0].[answers][1].[answer]" placeholder="Enter question answer"  />
-        <input type="checkbox" name="question_groups[0].[questions][0].[answers][1].[correct]"  />
-      </div>
-      <div>
-        <input type="text" name="question_groups[0].[questions][0].[answers][2].[answer]" placeholder="Enter question answer"  />
-        <input type="checkbox" name="question_groups[0].[questions][0].[answers][2].[correct]"  />
-      </div>
-      <div>
-        <input type="text" name="question_groups[0].[questions][0].[answers][3].[answer]" placeholder="Enter question answer"  />
-        <input type="checkbox" name="question_groups[0].[questions][0].[answers][3].[correct]"  />
-      </div>
-      <div>
-        <input type="text" name="question_groups[0].[questions][0].[answers][4].[answer]" placeholder="Enter question answer"  />
-        <input type="checkbox" name="question_groups[0].[questions][0].[answers][4].[correct]"  />
+        <input type="submit" value="New" class="btn btn-primary" />
       </div>
     </form>
+  </div> <!-- end form-group -->
+
+  <!-- Modal -->
+  <div id="addQuestionDialog" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+        <input type="text" id="groupId" value="" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
   </div>
+</div><!-- End Modal -->
+
+
 </body>
