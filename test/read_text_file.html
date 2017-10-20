@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+  <input type="file" name="file" id="file">
+
+  <script type="text/javascript">
+    document.getElementById('file').onchange = function(){
+      var file = this.files[0];
+
+      var reader = new FileReader();
+      reader.onload = function(progressEvent){
+        // Entire file
+        // console.log(this.result);
+
+        // By lines
+        var lines = this.result.split('\n');
+        for(var line = 0; line < lines.length; line++){
+          console.log(lines[line]);
+        }
+      };
+      reader.readAsText(file);
+    };
+
+  </script>
+</body>
+</html>
