@@ -58,24 +58,32 @@ $(document).on("click", ".addQuestionGroups", function(){
   questionTitle = 'question_groups[' + n + '][title]';
   questionGroupTitleId = questionGroupId + 'title';
 
-  $('<div>').attr( 'id', questionGroupId ).appendTo("#question_groups_container");
+  $('<div>').attr( 'id', questionGroupId )
+    .attr('style', 'padding:5px; border:dashed 1px gray;')
+    .appendTo("#question_groups_container");
 
   $('<input>').attr('type','text')
     .attr('name', questionTitle)
+
     .attr('id', questionGroupTitleId)
     .appendTo("#" + questionGroupId);
 
   $('<a>').attr('data-toggle', 'modal')
-    .attr('style', 'display:none')
-    .attr('data-id', n)
+    .attr('style', 'display:none; margin-left:5px')
+    .attr('data-id', 'addQuestionDialog_'+n)
+    .attr('id', "addQuestionDialog_"+n)
     .attr('class', 'open-AddQuestionDialog btn btn-primary')
     .attr('href', '#addQuestionDialog')
     .text('Add Question')
     .appendTo("#" + questionGroupId);
 
   $(document).on("input", 'input#'+questionGroupTitleId, function(){
-    if(this.val() !== ''){
-
+    if($(this).val() !== ''){
+      $("#addQuestionDialog_"+n).attr('style', 'display:inline; margin-left:5px');
+    }
+    else
+    {
+      $("#addQuestionDialog_"+n).attr('style', 'display:none; margin-left:5px');
     }
   });
 
