@@ -19,17 +19,19 @@ var MODAL_BTN = "<a data-toggle='modal' data-id='__groupIdx__' title='Add this i
 var isFormValid = false;
 var group_index = 0;
 var currentGroupIdx = 0;
+
+var questionGroups = [];
+var questionGroup = {};
+var name = '';
+var passMark = 0;
+var quiz = {'name': name, 'pass_mark': passMark, 'question_groups':questionGroups};
 /* -------------------------------------------------------------------------- */
 
 $(document).on("click", ".open-AddQuestionDialog", function () {
   var groupId = $(this).data('id');
   $(".modal-body #groupId").attr('name', 'question_groups[' + groupId + ']');
 });
-var questionGroups = [];
-var questionGroup = {};
-var name = '';
-var passMark = 0;
-var quiz = {'name': name, 'pass_mark': passMark, 'question_groups':questionGroups};
+
 /*
 question_groups:[{
   'title':'string',
@@ -50,12 +52,12 @@ question_groups[group_index].[questions][question_index].[answers]
 question_groups[group_index].[questions][question_index].[answers][answer_index].[correct]
 question_groups[group_index].[questions][question_index].[answers][answer_index].[answer]
 */
-
+/*
 $(document).on("click", ".addQuestionGroups", function(){
-  var n = questionGroups.length;
-  questionGroups[n] = {'title':'', 'questions':null};
-  questionGroupId = 'question_groups_' + n;
-  questionTitle = 'question_groups[' + n + '][title]';
+
+  //questionGroups[questionGroupIndex] = {'title':'', 'questions':null};
+  questionGroupId = 'question_groups_' + questionGroupIndex;
+  questionTitle = 'question_groups[' + questionGroupIndex + '][title]';
   questionGroupTitleId = questionGroupId + 'title';
 
   $('<div>').attr( 'id', questionGroupId )
@@ -70,8 +72,8 @@ $(document).on("click", ".addQuestionGroups", function(){
 
   $('<a>').attr('data-toggle', 'modal')
     .attr('style', 'display:none; margin-left:5px')
-    .attr('data-id', 'addQuestionDialog_'+n)
-    .attr('id', "addQuestionDialog_"+n)
+    .attr('data-id', questionGroupIndex)
+    .attr('id', "addQuestionDialog_" + questionGroupIndex)
     .attr('class', 'open-AddQuestionDialog btn btn-primary')
     .attr('href', '#addQuestionDialog')
     .text('Add Question')
@@ -79,16 +81,94 @@ $(document).on("click", ".addQuestionGroups", function(){
 
   $(document).on("input", 'input#'+questionGroupTitleId, function(){
     if($(this).val() !== ''){
-      $("#addQuestionDialog_"+n).attr('style', 'display:inline; margin-left:5px');
+      $("#addQuestionDialog_" + questionGroupIndex).attr('style', 'display:inline; margin-left:5px');
     }
     else
     {
-      $("#addQuestionDialog_"+n).attr('style', 'display:none; margin-left:5px');
+      $("#addQuestionDialog_" + questionGroupIndex).attr('style', 'display:none; margin-left:5px');
     }
   });
 
+  questionIndex = 0;
+  $(document).on('click', '.open-AddQuestionDialog', function(){
+    var groupIdx = $(this).data('id');
+    questionGroupTitle = $("#"+questionGroupTitleId).val();
+
+    $("#groupTitle").text((groupIdx + 1) + '. ' + questionGroupTitle);
+
+    $('<textarea>').attr('name', 'question_groups['+ groupIdx +']' + '[questions]['+questionIndex+'][title]')
+      .appendTo("#questionsContainer");
+    $('<input>').attr('type', 'text')
+      .attr('name', 'question_groups['+ groupIdx +']' + '[questions]['+questionIndex+'][mark]')
+      .appendTo("#questionsContainer");
+    $('<a>').attr('class', 'addAnswer btn btn-success')
+      .attr('data-gidx', groupIdx)
+      .attr('data-qidx', questionIndex)
+      .text('Add Answer')
+      .attr('data-question', questionIndex)
+      .appendTo("#questionsContainer");
+
+    answerIndex = 0;
+
+    $(document).on('click', '.addAnswer', function(){
+      var groupIdx = $(this).data('gidx'),
+      questionIdx = $(this).data('qidx');
+      $('<br>').appendTo("#questionsContainer");
+      $('<input>').attr('type', 'text')
+        .attr('name', 'question_groups['+ groupIdx +']' + '[questions]['+questionIdx+'][answers]['+answerIndex+'][answer]')
+        .appendTo("#questionsContainer");
+      $('<input>').attr('type', 'checkbox')
+        .attr('name', 'question_groups['+ groupIdx +']' + '[questions]['+questionIdx+'][answers]['+answerIndex+'][correct]')
+        .appendTo("#questionsContainer");
+
+      answerIndex++;
+    });
+    questionIndex++;
+  });
+  questionGroupIndex++;
 });
 
+*/
+
+function addQuestionGroupRow(parent, questionGroupIdx, questionGroupTitle){
+  var tr = $('<tr>');
+  $('<td>').text(questionGroupIdx).appendTo(tr);
+  $('<td>').attr('class', 'text-truncate max-size-250px text-left')
+    .text(questionGroupTitle)
+    .appendTo(tr);
+  var td = $('<td>');
+  var a1 = $('<a>').attr('class', 'addQuestion btn btn-info').attr('data-id', questionGroupIdx)
+
+  $('<i>').attr('class', 'fa fa-list-alt')
+          .attr('aria-hidden', 'true')
+          .appendTo(a1);
+  var a2 = $('<a>').attr('class', 'removeQuestionGroup btn btn-danger').attr('data-id', questionGroupIdx)
+
+  $('<i>').attr('class', 'fa fa-times')
+          .attr('aria-hidden', 'true')
+          .appendTo(a2);
+  a1.appendTo(td);
+  a2.appendTo(td);
+  td.appendTo(tr);
+  tr.appendTo(parent);
+}
+
+$(document).on('click', '.addQuestionGroup', function(){
+  console.log('addQuestionGroup button clicked!')
+
+  var questionGroupTitle = $('#questionGroupTitle').val();
+  questionGroups[questionGroups.length] = {'title': questionGroupTitle, 'questions':[]};
+
+  addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, questionGroupTitle);
+
+});
+
+$(document).on('click', '.addQuestion', function(){
+  groupIdx = $(this).data('id') - 1;
+  questionGroups[groupIdx].questions = [{'title':'', 'mark':0, 'answers':[]}]
+  console.log(questionGroups[groupIdx]);
+  $('#addQuestionDialog').modal();
+});
 
 /* -------------------------------------------------------------------------- */
 function submitForm(){
@@ -100,30 +180,4 @@ function submitForm(){
   }
   // if form valid -> submit form.
   return true;
-}
-
-function addQuestionGroups(){
-  String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-  };
-
-  var container = document.querySelector('#question_groups_container');
-
-  container.innerHTML += QUESTION_GROUP_EL.replaceAll('__groupIdx__', currentGroupIdx);
-  var addedQuestionGroup = document.querySelector('#question_groups_' + currentGroupIdx);
-  addedQuestionGroup.innerHTML += MODAL_BTN.replaceAll('__groupIdx__', currentGroupIdx);
-
-  currentGroupIdx++;
-}
-
-function addQuestionToGroup(groupIdx){
-  var currentGroup = document.querySelector('#question_groups_' + groupIdx);
-  // get all div child, check max question id
-}
-function addAnswer(groupIdx, questionIdx){
-  //
-}
-function test(){
-  alert('Test JS OK.');
 }

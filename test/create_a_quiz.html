@@ -2,56 +2,95 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src="https://use.fontawesome.com/df984162ab.js"></script>
+  <link href="create_a_quiz.css" rel="stylesheet" />
   <script type="text/javascript" src="create_a_quiz.js"></script>
 </head>
 <body>
-  <div class="form-group">
-    <form action="http://api.namvl.com/quizzes" method="post" onsubmit="return submitForm()">
-      <div class="">
-        <span>Quiz name: </span><input type="text" name="name" placeholder="Enter quiz name"/>
+  <div class="main-content container">
+    <div class="row vdivide">
+      <div class="col-sm-9 text-center">
+        <form action="http://api.namvl.com/quizzes" method="post" onsubmit="return submitForm()">
+          <div class="form-inline text-left">
+            <div class="form-group col-3">
+              <label for="quizName" class="control-label">Quiz name:</label>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="quizName" name="name" placeholder="Enter quiz name"/>
+            </div>
+          </div>
+          <div class="form-inline text-left" style="margin-top:5px">
+            <div class="form-group col-3">
+              <label for="quizPassMark" class="control-label">Pass mark:</label>
+            </div>
+            <div class="form-group">
+              <input type="number" class="form-control" id="quizPassMark" name="pass_mark" placeholder="Enter quiz pass mark"/>
+            </div>
+          </div>
+          <div class="sep">
+            &nbsp;
+          </div>
+          <div class="form-inline p-1">
+            <div class="form-group col-3 text-left">
+              <label for="" class="control-label">Question group:</label>
+            </div>
+            <div class="form-group col-7">
+              <input type="text" class="form-control col-12" id="questionGroupTitle" placeholder="Enter question group title"/>
+            </div>
+            <div class="form-group">
+              <a class="addQuestionGroup btn btn-success" href="#"><i class="fa fa-plus" aria-hidden="true"></i> Add</a>
+            </div>
+          </div>
+          <table class="table table-bordered" id="question_groups_container">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Question group</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+
+          </table><!-- end question_groups_container -->
+          <div class="sep">
+            &nbsp;
+          </div>
+          <div class="text-left">
+            <input type="submit" value="New" class="btn btn-primary" />
+          </div>
+        </form>
       </div>
-      <div>
-        <span>Pass mark: </span><input type="number" name="pass_mark" placeholder="50" />
+      <div class="col-sm-3 text-center">
       </div>
-      <div class="row">
-        &nbsp;
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <span></span>
-          <a class="addQuestionGroups btn btn-primary" href="#">Add question group</a>
-        </div>
-      </div>
-      <div id="question_groups_container">
-      </div> <!-- end question_groups_container -->
-      <div>
-        <input type="submit" value="New" class="btn btn-primary" />
-      </div>
-    </form>
-  </div> <!-- end form-group -->
+    </div>
+  </div> <!-- end main-content -->
 
   <!-- Modal -->
-  <div id="addQuestionDialog" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-        <input type="text" id="groupId" value="" />
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  <div id="addQuestionDialog" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="groupTitle"></p>
+          <div id="questionsContainer"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div><!-- End Modal -->
-
-
+<!-- End Modal -->
 </body>
