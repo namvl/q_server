@@ -24,7 +24,7 @@ var questionGroups = [];
 var questionGroup = {};
 var name = '';
 var passMark = 0;
-var quiz = {'name': name, 'pass_mark': passMark, 'question_groups':questionGroups};
+var quiz = {};
 /* -------------------------------------------------------------------------- */
 
 $(document).on("click", ".open-AddQuestionDialog", function () {
@@ -156,22 +156,153 @@ function addQuestionGroupRow(parent, questionGroupIdx, questionGroupTitle){
 $(document).on('click', '.addQuestionGroup', function(){
   console.log('addQuestionGroup button clicked!')
 
-  var questionGroupTitle = $('#questionGroupTitle').val();
-  questionGroups[questionGroups.length] = {'title': questionGroupTitle, 'questions':[]};
+  //var questionGroupTitle = $('#questionGroupTitle').val();
+  questionGroups[questionGroups.length] = {'title': $('#questionGroupTitle').val(), 'questions':[]};
 
-  addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, questionGroupTitle);
+  addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, $('#questionGroupTitle').val());
+
+  $('#questionGroupTitle').val('');
+  $(this).addClass('disabled');
 
 });
 
-$(document).on('click', '.addQuestion', function(){
-  groupIdx = $(this).data('id') - 1;
-  questionGroups[groupIdx].questions = [{'title':'', 'mark':0, 'answers':[]}]
-  console.log(questionGroups[groupIdx]);
+function initQuestionAtGroup(groupIndex){
   $('#addQuestionDialog').modal();
+  $('#questionGroupIndex').val(groupIndex);
+}
+function addQuestionToGroup(groupIndex){
+
+  var answers = [];
+  $('input[name=corrects]').each(function(){
+    var answerIndex = $(this).val();
+
+    var answer = $('input[name=answers]')[answerIndex-1].value;
+    var correct = false;
+    if( $(this).is(":checked") ){
+      correct = true;
+    }
+    answers[answerIndex-1] = {'answer': answer, 'correct': correct};
+  });
+  var question = {'title': $('#questionTitle').val(), 'mark':$('#questionMark').val(), 'answers':answers}
+  console.log(question);
+  var questionIndex = questionGroups[groupIndex-1].questions.length;
+  questionGroups[groupIndex-1].questions[questionIndex] = question;
+  console.log(questionGroups);
+}
+var answerIdx = 0;
+function addQuestionFormReset(){
+  $('#answersContainer').empty();
+  $('#questionGroupIndex').val('');
+  $('#questionTitle').val('');
+  $('input[name=answers]').val('');
+  $('input[name=corrects]').prop('checked', false);
+  answerIdx = 0;
+}
+$(document).on('change keydown keyup paste', '#questionGroupTitle', function() {
+
+  if($.trim($(this).val()) != ''){
+    $('.addQuestionGroup').removeClass('disabled');
+  }
+  else{
+    $('.addQuestionGroup').addClass('disabled');
+  }
+});
+
+$(document).on('change keydown keyup paste', '#quizName', function() {
+  if($.trim($(this).val()) != ''){
+    $('#quizName').removeClass('is-invalid');
+  }
+  else{
+    $('#quizName').addClass('is-invalid');
+  }
+});
+
+
+$(document).on('click', '.addQuestion', function(){
+  initQuestionAtGroup($(this).data('id'));
+});
+
+$(document).on('click', '.addAnswer', function(){
+  answerIdx++;
+  $('<div>').prepend($('<input>').attr('type', 'text').attr('name', 'answers')).prepend($('<input>').attr('type', 'checkbox').attr('name', 'corrects').val(answerIdx)).appendTo($('#answersContainer'));
+});
+
+
+$(document).on('click', '.saveQuestion', function(){
+  addQuestionToGroup($('#questionGroupIndex').val());
+  addQuestionFormReset();
+  $('#addQuestionDialog').modal('toggle');
+})
+
+$(document).on('click', '.quizPreview', function(){
+  onPreview();
+
+  console.log(quiz)
+})
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+$(document).ready(function(){
+  onPageLoad();
+});
+
+$(document).on('click', '.addNewQuiz', function(){
+  formValidation();
+  quiz.name = $('#quizName').val();
+  quiz.pass_mark = $('#quizPassMark').val();
+  quiz.publish_at = $('#publishAt').val();
+  quiz.due_at = $('#dueAt').val();
+  quiz.question_groups = questionGroups;
+  addNewQuiz();
 });
 
 /* -------------------------------------------------------------------------- */
-function submitForm(){
+function onPageLoad(){
+  var now = new Date();
+  var presentTime = new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().substring(0,19);
+  var nextWeek = addDays(now, 7);
+  var expiredTime = new Date(nextWeek.getTime()-nextWeek.getTimezoneOffset()*60000).toISOString().substring(0,19);
+  $('#publishAt').val(presentTime);
+  $('#dueAt').val(expiredTime);
+}
+function formValidation(){
+  if( $.trim($('#quizName').val()) == ""){
+    alert("Test");
+    $('#quizName').val('');
+    $('#quizName').addClass('is-invalid');
+    return;
+  }
+}
+function onPreview(){
+  formValidation();
+  quiz.name = $('#quizName').val();
+  quiz.pass_mark = $('#quizPassMark').val();
+  quiz.publish_at = $('#publishAt').val();
+  quiz.due_at = $('#dueAt').val();
+  quiz.question_groups = questionGroups;
+}
+function addNewQuiz(){
+  $.ajax({
+        type: 'post',
+        url: 'http://api.namvl.com/quizzes',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(quiz)
+    }).done(function (data)
+    {
+      console.log('Posting successful with return data:');
+      console.log(data);
+    }).error(function (jqXHR, textStatus, errorThrown)
+    {
+      console.log('Posting failed with return data:');
+      console.log(jqXHR.responseText);
+      console.log(textStatus);
+    });
+}
+function onSubmit(){
   // form validate code here
 
   // checking before submit
