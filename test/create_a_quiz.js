@@ -254,6 +254,7 @@ $(document).on('click', '.addNewQuiz', function(){
   formValidation();
   quiz.name = $('#quizName').val();
   quiz.pass_mark = $('#quizPassMark').val();
+  quiz.duration = $('#quizDuration').val();
   quiz.publish_at = $('#publishAt').val();
   quiz.due_at = $('#dueAt').val();
   quiz.question_groups = questionGroups;
@@ -281,6 +282,7 @@ function onPreview(){
   formValidation();
   quiz.name = $('#quizName').val();
   quiz.pass_mark = $('#quizPassMark').val();
+  quiz.duration = $('#quizDuration').val();
   quiz.publish_at = $('#publishAt').val();
   quiz.due_at = $('#dueAt').val();
   quiz.question_groups = questionGroups;
@@ -295,12 +297,17 @@ function addNewQuiz(){
     {
       console.log('Posting successful with return data:');
       console.log(data);
-    }).error(function (jqXHR, textStatus, errorThrown)
+    }).fail(function (jqXHR, textStatus, errorThrown)
     {
       console.log('Posting failed with return data:');
       console.log(jqXHR.responseText);
       console.log(textStatus);
     });
+
+    $.post( 'http://api.namvl.com/quizzes', function( data ) {
+      $( ".result" ).html( data );
+    });
+
 }
 function onSubmit(){
   // form validate code here
