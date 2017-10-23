@@ -161,14 +161,53 @@ $(document).on('click', '.addQuestionGroup', function(){
 
   addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, questionGroupTitle);
 
+  $('#questionGroupTitle').val('');
 });
 
 $(document).on('click', '.addQuestion', function(){
   groupIdx = $(this).data('id') - 1;
   questionGroups[groupIdx].questions = [{'title':'', 'mark':0, 'answers':[]}]
-  console.log(questionGroups[groupIdx]);
+  var question = {'title':'', 'mark':0, 'answers':[{'answer':'', 'correct':false}]};
+  $('#groupTitle').text(questionGroups[groupIdx].title);
+
   $('#addQuestionDialog').modal();
+  answerIndex = 0;
+
+  $(document).on('click', '.addAnswer', function(){
+    $('<input>').attr('type', 'text')
+      .attr('name', 'answers')
+      .attr('data-index', answerIndex)
+      .appendTo($('#answers'));
+    $('<input>').attr('type', 'checkbox')
+      .attr('name', 'corrects')
+      .attr('data-index', answerIndex)
+      .appendTo($('#answers'));
+    $('<br />').appendTo($('#answers'));
+    answerIndex++;
+  });
+
+  $(document).on('click', '#questionSave', function(){
+    var answers = [];
+    var anAnswer = {'answer':'', 'correct':false};
+
+    correctAnswers = [];
+    $("input:checked").each(function( index, valor ){
+      var index = $(this).data('index');
+      correctAnswers.push(index);
+    });
+
+    $("input[name=answers]").each(function( index, valor ){
+      anAnswer.answer = valor.value;
+      //if($("input[name=corrects]"))
+      anAnswer.correct = false;
+      answers[index] = anAnswer;
+    });
+
+  });
+
 });
+
+
 
 /* -------------------------------------------------------------------------- */
 function submitForm(){

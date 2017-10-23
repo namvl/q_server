@@ -11,6 +11,9 @@ mongoose.connect('mongodb://<username>:<password>$@cluster0-shard-00-00-gpfx7.mo
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+var cors = require('cors');
+app.use(cors({origin: 'https://jquiz-client.herokuapp.com'}));
+
 var routes = require('./api/routes/quizRoutes');
 routes(app);
 
