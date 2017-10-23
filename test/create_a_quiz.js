@@ -24,7 +24,7 @@ var questionGroups = [];
 var questionGroup = {};
 var name = '';
 var passMark = 0;
-var quiz = {'name': name, 'pass_mark': passMark, 'question_groups':questionGroups};
+var quiz = {};
 /* -------------------------------------------------------------------------- */
 
 $(document).on("click", ".open-AddQuestionDialog", function () {
@@ -156,10 +156,13 @@ function addQuestionGroupRow(parent, questionGroupIdx, questionGroupTitle){
 $(document).on('click', '.addQuestionGroup', function(){
   console.log('addQuestionGroup button clicked!')
 
-  var questionGroupTitle = $('#questionGroupTitle').val();
-  questionGroups[questionGroups.length] = {'title': questionGroupTitle, 'questions':[]};
+  //var questionGroupTitle = $('#questionGroupTitle').val();
+  questionGroups[questionGroups.length] = {'title': $('#questionGroupTitle').val(), 'questions':[]};
 
-  addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, questionGroupTitle);
+  addQuestionGroupRow($('#question_groups_container tbody'), questionGroups.length, $('#questionGroupTitle').val());
+
+  $('#questionGroupTitle').val('');
+  $(this).addClass('disabled');
 
   $('#questionGroupTitle').val('');
 });
@@ -210,7 +213,54 @@ $(document).on('click', '.addQuestion', function(){
 
 
 /* -------------------------------------------------------------------------- */
-function submitForm(){
+function onPageLoad(){
+  var now = new Date();
+  var presentTime = new Date(now.getTime()-now.getTimezoneOffset()*60000).toISOString().substring(0,19);
+  var nextWeek = addDays(now, 7);
+  var expiredTime = new Date(nextWeek.getTime()-nextWeek.getTimezoneOffset()*60000).toISOString().substring(0,19);
+  $('#publishAt').val(presentTime);
+  $('#dueAt').val(expiredTime);
+}
+function formValidation(){
+  if( $.trim($('#quizName').val()) == ""){
+    alert("Test");
+    $('#quizName').val('');
+    $('#quizName').addClass('is-invalid');
+    return;
+  }
+}
+function onPreview(){
+  formValidation();
+  quiz.name = $('#quizName').val();
+  quiz.pass_mark = $('#quizPassMark').val();
+  quiz.duration = $('#quizDuration').val();
+  quiz.publish_at = $('#publishAt').val();
+  quiz.due_at = $('#dueAt').val();
+  quiz.question_groups = questionGroups;
+}
+function addNewQuiz(){
+  $.ajax({
+        type: 'post',
+        url: 'http://api.namvl.com/quizzes',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(quiz)
+    }).done(function (data)
+    {
+      console.log('Posting successful with return data:');
+      console.log(data);
+    }).fail(function (jqXHR, textStatus, errorThrown)
+    {
+      console.log('Posting failed with return data:');
+      console.log(jqXHR.responseText);
+      console.log(textStatus);
+    });
+
+    $.post( 'http://api.namvl.com/quizzes', function( data ) {
+      $( ".result" ).html( data );
+    });
+
+}
+function onSubmit(){
   // form validate code here
 
   // checking before submit
