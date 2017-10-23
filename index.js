@@ -1,6 +1,6 @@
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 1234,
+  port = process.env.PORT || 3004,
   mongoose = require('mongoose'),
   Quiz = require('./api/models/quizModel'),
   config = require('./config'),
