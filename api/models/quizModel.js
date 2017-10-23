@@ -11,6 +11,7 @@ var QuizSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  exec_limit_time:Number,
   due_at: Date,
   pass_mark:Number,
   question_groups:[{
@@ -20,7 +21,7 @@ var QuizSchema = new Schema({
       mark: Number,
       answers:[{
         index: Number,
-        answer: String,
+        content: String,
         correct: Boolean
       }]
     }]
