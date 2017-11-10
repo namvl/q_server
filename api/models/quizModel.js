@@ -7,6 +7,8 @@ var QuizSchema = new Schema({
     type: String,
     required: 'Enter quiz name'
   },
+  description: String,
+  tags: String,
   publish_at:{
     type: Date,
     default: Date.now
